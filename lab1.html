@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #fafafa;
+            transition: border 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        .validation-message {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .readonly-field {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .preview-img {
+            margin-top: 10px;
+            max-width: 100px;
+            height: auto;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .secondary-button {
+            background-color: #6c757d;
+            margin-top: 10px;
+            text-align: center;
+            display: block;
+            color: white;
+        }
+
+        .secondary-button:hover {
+            background-color: #5a6268;
+        }
+
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Create Account</h2>
+    
+    <form id="accountForm">
+        <!-- Username Input -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" maxlength="255" required>
+            <span class="validation-message" id="username-error">Username is already taken</span>
+        </div>
+        
+        <!-- Password Input -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" maxlength="255" required>
+            <span class="validation-message" id="password-error">Password is too weak</span>
+            <br>
+            <input type="checkbox" id="showPassword"> Show Password
+        </div>
+        
+        <!-- Email Input -->
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" maxlength="255" required>
+            <span class="validation-message" id="email-error">Invalid email format</span>
+        </div>
+        
+        <!-- Full Name Input (Optional) -->
+        <div class="form-group">
+            <label for="fullname">Full Name (optional)</label>
+            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" maxlength="255">
+        </div>
+        
+        <!-- Role Dropdown -->
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="">Select a role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
+            <span class="validation-message" id="role-error">Please select a role</span>
+        </div>
+        
+        <!-- Profile Picture Upload -->
+        <div class="form-group">
+            <label for="profilePicture">Profile Picture</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+            <img id="imagePreview" class="preview-img" src="" alt="Image Preview">
+        </div>
+        
+        <!-- Read-only Fields -->
+        <div class="form-group">
+            <label>Account Created At</label>
+            <div class="readonly-field" id="createdAt">2024-09-28 14:00:00</div>
+        </div>
+        
+        <div class="form-group">
+            <label>Last Updated At</label>
+            <div class="readonly-field" id="lastUpdatedAt">2024-09-28 14:00:00</div>
+        </div>
+        
+        <!-- Buttons -->
+        <button type="submit" id="submitButton">Create Account</button>
+        <a href="#" class="secondary-button" id="cancelButton">Cancel</a>
+    </form>
+
+    <script>
+        // Show/Hide password functionality
+        document.getElementById('showPassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        // Image preview functionality
+        document.getElementById('profilePicture').addEventListener('change', function(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                document.getElementById('imagePreview').src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
+
+</body>
+</html>
